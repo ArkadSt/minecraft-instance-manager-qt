@@ -20,14 +20,6 @@ class Ui_MainWindow(object):
         self.instances_listWidget = QtWidgets.QListWidget(self.centralwidget)
         self.instances_listWidget.setGeometry(QtCore.QRect(10, 40, 261, 241))
         self.instances_listWidget.setObjectName("instances_listWidget")
-        item = QtWidgets.QListWidgetItem()
-        self.instances_listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.instances_listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.instances_listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.instances_listWidget.addItem(item)
         self.storage_location_lineEdit = QtWidgets.QLineEdit(
             self.centralwidget)
         self.storage_location_lineEdit.setGeometry(
@@ -98,16 +90,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate(
             "MainWindow", "Minecraft instance manager"))
         __sortingEnabled = self.instances_listWidget.isSortingEnabled()
-        self.instances_listWidget.setSortingEnabled(False)
-        item = self.instances_listWidget.item(0)
-        item.setText(_translate("MainWindow", "example"))
-        item = self.instances_listWidget.item(1)
-        item.setText(_translate("MainWindow", "example2"))
-        item = self.instances_listWidget.item(2)
-        item.setText(_translate("MainWindow", "example3"))
-        item = self.instances_listWidget.item(3)
-        item.setText(_translate("MainWindow", "example4"))
-        self.instances_listWidget.setSortingEnabled(__sortingEnabled)
         self.active_instance_label.setText(
             _translate("MainWindow", "Active instance: "))
         self.storage_location_label.setText(
@@ -125,3 +107,11 @@ class Ui_MainWindow(object):
         self.unselect_pushButton.setText(_translate("MainWindow", "Unselect"))
         self.create_pushButton.setText(_translate("MainWindow", "Create"))
         self.reset_pushButton.setText(_translate("MainWindow", "Reset"))
+
+    def initUI(self):
+        self.le = QtWidgets.QLineEdit(self)
+        self.le.move(130, 22)
+
+        self.setGeometry(300, 300, 290, 150)
+        self.setWindowTitle('Input dialog')
+        self.show()

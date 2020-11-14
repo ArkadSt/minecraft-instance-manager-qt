@@ -6,7 +6,7 @@ import ctypes
 import configparser
 from pathlib import Path
 from gui import Ui_MainWindow
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 # init config parser for saving custom path
 config = configparser.ConfigParser()
@@ -115,7 +115,7 @@ def unselect_instance():
         print('None of the instances are selected.')
 
 
-def create_instance_universal(instance):
+def create_instance(instance):
     if instance == '.DS_Store':
         print('Go find a job.')
         exit(1)
@@ -134,7 +134,7 @@ def create_instance_universal(instance):
     Path(instances_directory + instance + '/' + instance + '.mp3').touch()
 
 
-def delete_instance_universal(instance):
+def delete_instance(instance):
     if not os.path.exists(instances_directory + instance):
         print(f'The instance "{instance}" doesn\'t exist.')
         exit(1)
@@ -151,16 +151,6 @@ def delete_instance_universal(instance):
                 was_active = True
 
     shutil.rmtree(instances_directory + instance)
-
-
-def create_instance(instance):
-    create_instance_universal(instance)
-    print(f'The instance "{instance}" was created successfully.')
-
-
-def delete_instance(instance):
-    delete_instance_universal(instance)
-    print(f'The instance "{instance}" was deleted successfully.')
 
 
 def rename_instance(instance, new_instance_name):
@@ -189,8 +179,8 @@ def rename_instance(instance, new_instance_name):
 
 
 def reset_instance(instance):
-    delete_instance_universal(instance)
-    create_instance_universal(instance)
+    delete_instance(instance)
+    create_instance(instance)
 
     if was_active:
         os.symlink(instances_directory + instance, minecraft_directory)
@@ -209,4 +199,69 @@ def duplicate_instance(instance, duplicate):
     else:
         print(f'The instance "{instance}" doesn\'t exist')
 
-# if __name__ == '__main__':
+
+class Minecraft_IM(QtWidgets.QMainWindow):
+
+    def __init__(self):
+        super(Minecraft_IM, self).__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+
+        self.ui.create_pushButton.clicked.connect(self.btn_create)
+        self.ui.delete_pushButton.clicked.connect(self.btn_delete)
+        self.ui.reset_pushButton.clicked.connect(self.btn_reset)
+        self.ui.duplicate_pushButton.clicked.connect(self.btn_duplicate)
+        self.ui.select_pushButton.clicked.connect(self.btn_select)
+        self.ui.unselect_pushButton.clicked.connect(self.btn_unselect)
+        self.ui.rename_pushButton.clicked.connect(self.btn_rename)
+        self.ui.set_default_location_pushButton.clicked.connect(
+            self.btn_setdefloc)
+        self.ui.browse_pushButton.clicked.connect(self.btn_browse)
+        self.ui.storage_location_OK_pushButton.clicked.connect(
+            self.btn_storeloc)
+
+    def showDialog(self):
+
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Minecraft-IM',
+                                                  'Enter name of the instance:')
+
+        if ok:
+            self.le.setText(str(text))
+
+    def btn_create(self):
+        self.showDialog()
+
+    def btn_delete(self):
+        pass
+
+    def btn_reset(self):
+        pass
+
+    def btn_duplicate(self):
+        pass
+
+    def btn_select(self):
+        pass
+
+    def btn_unselect(self):
+        pass
+
+    def btn_rename(self):
+        pass
+
+    def btn_setdefloc(self):
+        set_default_path
+
+    def btn_browse(self):
+        pass
+
+    def btn_storeloc(self):
+        pass
+
+
+app = QtWidgets.QApplication([])
+application = Minecraft_IM()
+application.show()
+
+
+sys.exit(app.exec())
