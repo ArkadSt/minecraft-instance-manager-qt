@@ -5,20 +5,26 @@ import sys
 import ctypes
 import configparser
 from pathlib import Path
+from gui import Ui_MainWindow
+from PyQt5 import QtWidgets
 
 # init config parser for saving custom path
 config = configparser.ConfigParser()
 config.read("config.ini")
 
 # Checking the name of os for creating a folder for minecraft_instance_manager and minecraft_parent_directory
+
+
 def set_default_path():
     if platform.system() == 'Linux':
         minecraft_parent_directory = os.getenv('HOME') + '/.'
     elif platform.system() == 'Darwin':
-        minecraft_parent_directory = os.getenv('HOME') + '/Library/Application Support/'
+        minecraft_parent_directory = os.getenv(
+            'HOME') + '/Library/Application Support/'
     elif platform.system() == 'Windows':
         if not ctypes.windll.shell32.IsUserAnAdmin():
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+            ctypes.windll.shell32.ShellExecuteW(
+                None, "runas", sys.executable, " ".join(sys.argv), None, 1)
             sys.exit(0)
         minecraft_parent_directory = os.getenv('APPDATA') + '\\.'
 
@@ -26,11 +32,14 @@ def set_default_path():
     minecraft_directory_var = minecraft_parent_directory + 'minecraft'
     config.set('paths', 'minecraft_directory', str(minecraft_directory_var))
 
-    minecraft_instance_manager_directory_var = minecraft_parent_directory + 'minecraft_instance_manager/'
-    config.set('paths', 'minecraft_instance_manager_directory', str(minecraft_instance_manager_directory_var))
+    minecraft_instance_manager_directory_var = minecraft_parent_directory + \
+        'minecraft_instance_manager/'
+    config.set('paths', 'minecraft_instance_manager_directory',
+               str(minecraft_instance_manager_directory_var))
 
     instances_directory_var = minecraft_instance_manager_directory_var + 'instances/'
     config.set('paths', 'instances_directory', str(instances_directory_var))
+
 
 minecraft_directory = config['paths']['minecraft_directory']
 minecraft_instance_manager_directory = config['paths']['minecraft_instance_manager_directory']
@@ -47,6 +56,8 @@ if not os.path.exists(instances_directory):
     os.mkdir(instances_directory)
 
 # Function to view list
+
+
 def list_instances():
     # if there is at least 1 instance
     if len(os.listdir(instances_directory)) > 0:
@@ -87,7 +98,8 @@ def select_instance(instance):
                 os.symlink(instances_directory + instance, minecraft_directory)
                 print(f'The instance "{instance}" was selected successfully.')
             except FileExistsError:
-                print(f'Seems like you have an existing Minecraft folder "{minecraft_directory}". It needs to be deleted or moved first.')
+                print(
+                    f'Seems like you have an existing Minecraft folder "{minecraft_directory}". It needs to be deleted or moved first.')
         else:
             print('Are you on drugs?')
     else:
@@ -161,12 +173,15 @@ def rename_instance(instance, new_instance_name):
                         os.unlink(minecraft_directory)
                         was_active = True
 
-            os.rename(instances_directory + instance, instances_directory + new_instance_name)
+            os.rename(instances_directory + instance,
+                      instances_directory + new_instance_name)
 
             if was_active:
-                os.symlink(instances_directory + new_instance_name, minecraft_directory)
+                os.symlink(instances_directory +
+                           new_instance_name, minecraft_directory)
 
-            print(f'Instance "{instance}" was successfully renamed to "{new_instance_name}".')
+            print(
+                f'Instance "{instance}" was successfully renamed to "{new_instance_name}".')
         else:
             print(f'The instance "{new_instance_name}" already exists')
     else:
@@ -185,8 +200,10 @@ def reset_instance(instance):
 def duplicate_instance(instance, duplicate):
     if os.path.exists(instances_directory + instance):
         if not os.path.exists(instances_directory + duplicate):
-            shutil.copytree(instances_directory + instance, instances_directory + duplicate)
-            print(f'The duplicate of "{instance}" named "{duplicate}" was successfully created.')
+            shutil.copytree(instances_directory + instance,
+                            instances_directory + duplicate)
+            print(
+                f'The duplicate of "{instance}" named "{duplicate}" was successfully created.')
         else:
             print(f'The instance "{duplicate}" already exists')
     else:
