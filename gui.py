@@ -107,11 +107,3 @@ class Ui_MainWindow(object):
         self.unselect_pushButton.setText(_translate("MainWindow", "Unselect"))
         self.create_pushButton.setText(_translate("MainWindow", "Create"))
         self.reset_pushButton.setText(_translate("MainWindow", "Reset"))
-
-    def initUI(self):
-        self.le = QtWidgets.QLineEdit(self)
-        self.le.move(130, 22)
-
-        self.setGeometry(300, 300, 290, 150)
-        self.setWindowTitle('Input dialog')
-        self.show()

@@ -6,6 +6,7 @@ import ctypes
 import configparser
 from pathlib import Path
 from gui import Ui_MainWindow
+from dialog import Ui_Dialog
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 # init config parser for saving custom path
@@ -30,20 +31,20 @@ def set_default_path():
 
     # Variables for paths
     minecraft_directory_var = minecraft_parent_directory + 'minecraft'
-    config.set('paths', 'minecraft_directory', str(minecraft_directory_var))
+    config.set('dirs', 'minecraft_directory', str(minecraft_directory_var))
 
     minecraft_instance_manager_directory_var = minecraft_parent_directory + \
         'minecraft_instance_manager/'
-    config.set('paths', 'minecraft_instance_manager_directory',
+    config.set('dirs', 'minecraft_instance_manager_directory',
                str(minecraft_instance_manager_directory_var))
 
     instances_directory_var = minecraft_instance_manager_directory_var + 'instances/'
-    config.set('paths', 'instances_directory', str(instances_directory_var))
+    config.set('dirs', 'instances_directory', str(instances_directory_var))
 
 
-minecraft_directory = config['paths']['minecraft_directory']
-minecraft_instance_manager_directory = config['paths']['minecraft_instance_manager_directory']
-instances_directory = config['paths']['instances_directory']
+minecraft_directory = config['dirs']['minecraft_directory']
+minecraft_instance_manager_directory = config['dirs']['minecraft_instance_manager_directory']
+instances_directory = config['dirs']['instances_directory']
 
 
 # Needed in order to reselect the reset instance if it was selected before
@@ -221,12 +222,7 @@ class Minecraft_IM(QtWidgets.QMainWindow):
             self.btn_storeloc)
 
     def showDialog(self):
-
-        text, ok = QtWidgets.QInputDialog.getText(self, 'Minecraft-IM',
-                                                  'Enter name of the instance:')
-
-        if ok:
-            self.le.setText(str(text))
+        pass
 
     def btn_create(self):
         self.showDialog()
