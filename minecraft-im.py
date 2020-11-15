@@ -7,6 +7,7 @@ import configparser
 from pathlib import Path
 from gui import Ui_MainWindow
 from PyQt5 import QtWidgets, QtCore, QtGui
+import asyncio
 
 # init config parser for saving custom path
 config = configparser.ConfigParser()
@@ -221,6 +222,9 @@ class Minecraft_IM(QtWidgets.QMainWindow):
             config['dirs']['instances_directory'])
         self.list_instances()
 
+    def set_lable_none(self):
+        self.ui.active_instance_label.setText('No instance selected')
+
     def item_clicked(self, item: QtWidgets.QListWidgetItem):
         return item.text()
 
@@ -231,11 +235,13 @@ class Minecraft_IM(QtWidgets.QMainWindow):
 
         if ok:
             create_instance(text)
+        self.list_instances()
 
     def btn_delete(self):
         listwgt = self.ui.instances_listWidget
         selected = listwgt.currentItem().text()
         delete_instance(selected)
+        self.list_instances()
 
     def btn_reset(self):
         pass
@@ -244,13 +250,25 @@ class Minecraft_IM(QtWidgets.QMainWindow):
         pass
 
     def btn_select(self):
-        pass
+        listwgt = self.ui.instances_listWidget
+        selected = listwgt.currentItem().text()
+        self.ui.active_instance_label.setText(f'Active instance: {selected}')
+        select_instance(selected)
 
     def btn_unselect(self):
-        pass
+        self.ui.active_instance_label.setText('No instance selected')
+        unselect_instance()
 
     def btn_rename(self):
-        pass
+        dialog = QtWidgets.QInputDialog()
+        text, ok = dialog.getText(self, 'Input name', 'Input new name:')
+
+        listwgt = self.ui.instances_listWidget
+        selected = listwgt.currentItem().text()
+
+        if ok:
+            rename_instance(selected, text)
+        self.list_instances()
 
     def btn_setdefloc(self):
         update_dir(minecraft_instance_manager_directory + 'instances/')
@@ -283,5 +301,10 @@ app = QtWidgets.QApplication(sys.argv)
 application = Minecraft_IM()
 application.show()
 
+# if not os.path.exists(minecraft_directory) and not os.path.islink(minecraft_directory):
+#     class1 = Minecraft_IM()
+#     class1.set_lable_none()
+# else:
+#     pass
 
 sys.exit(app.exec())
