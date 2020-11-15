@@ -6,7 +6,6 @@ import ctypes
 import configparser
 from pathlib import Path
 from gui import Ui_MainWindow
-from dialog import Ui_Dialog
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 # init config parser for saving custom path
@@ -19,7 +18,8 @@ elif platform.system() == 'Darwin':
     userdir = os.getenv('HOME') + '/Library/Application Support/'
 elif platform.system() == 'Windows':
     if not ctypes.windll.shell32.IsUserAnAdmin():
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, " ".join(sys.argv), None, 1)
         sys.exit(0)
     userdir = os.getenv('APPDATA') + '\\.'
 
@@ -38,13 +38,15 @@ if not os.path.exists(instances_directory):
 # Needed in order to reselect the reset instance if it was selected before
 was_active = False
 
+
 def update_dir(new_dir):
     config['dirs'] = {'instances_directory': new_dir}
     with open(config_file, 'w') as configfile:
         config.write(configfile)
-    
+
     global instances_directory
     instances_directory = config['dirs']['instances_directory']
+
 
 if os.path.exists(config_file):
     config.read(config_file)
@@ -52,7 +54,7 @@ if os.path.exists(config_file):
         instances_directory = config['dirs']['instances_directory']
     else:
         update_dir(minecraft_instance_manager_directory + 'instances/')
-else: 
+else:
     update_dir(minecraft_instance_manager_directory + 'instances/')
 
 
@@ -194,7 +196,8 @@ class Minecraft_IM(QtWidgets.QMainWindow):
                 if os.path.exists(minecraft_directory):
                     if os.path.islink(minecraft_directory):
                         if instance == os.path.split(os.readlink(minecraft_directory))[1]:
-                            self.ui.active_instance_label.setText('Active instance: ' + instance)
+                            self.ui.active_instance_label.setText(
+                                'Active instance: ' + instance)
                 self.ui.instances_listWidget.addItem(instance)
 
     def __init__(self):
@@ -209,22 +212,30 @@ class Minecraft_IM(QtWidgets.QMainWindow):
         self.ui.select_pushButton.clicked.connect(self.btn_select)
         self.ui.unselect_pushButton.clicked.connect(self.btn_unselect)
         self.ui.rename_pushButton.clicked.connect(self.btn_rename)
-        self.ui.set_default_location_pushButton.clicked.connect(self.btn_setdefloc)
+        self.ui.set_default_location_pushButton.clicked.connect(
+            self.btn_setdefloc)
         self.ui.browse_pushButton.clicked.connect(self.btn_browse)
         self.ui.storage_location_OK_pushButton.clicked.connect(self.btn_setloc)
 
-        self.ui.storage_location_lineEdit.setText(config['dirs']['instances_directory'])
+        self.ui.storage_location_lineEdit.setText(
+            config['dirs']['instances_directory'])
         self.list_instances()
 
-
-    def showDialog(self):
-        pass
+    def item_clicked(self, item: QtWidgets.QListWidgetItem):
+        return item.text()
 
     def btn_create(self):
-        self.showDialog()
+        dialog = QtWidgets.QInputDialog()
+
+        text, ok = dialog.getText(self, 'Input name', 'Input name:')
+
+        if ok:
+            create_instance(text)
 
     def btn_delete(self):
-        pass
+        listwgt = self.ui.instances_listWidget
+        selected = listwgt.currentItem().text()
+        delete_instance(selected)
 
     def btn_reset(self):
         pass
@@ -243,7 +254,8 @@ class Minecraft_IM(QtWidgets.QMainWindow):
 
     def btn_setdefloc(self):
         update_dir(minecraft_instance_manager_directory + 'instances/')
-        self.ui.storage_location_lineEdit.setText(config['dirs']['instances_directory'])
+        self.ui.storage_location_lineEdit.setText(
+            config['dirs']['instances_directory'])
         self.list_instances()
 
     def btn_browse(self):
@@ -264,7 +276,7 @@ class Minecraft_IM(QtWidgets.QMainWindow):
         else:
             messageBox = QtWidgets.QMessageBox()
             messageBox.critical(self, "Error", "Invalid directory")
-            messageBox.setFixedSize(500,200)
+            messageBox.setFixedSize(500, 200)
 
 
 app = QtWidgets.QApplication(sys.argv)
