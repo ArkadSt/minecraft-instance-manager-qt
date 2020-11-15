@@ -11,44 +11,23 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 # init config parser for saving custom path
 config = configparser.ConfigParser()
-config.read("config.ini")
 
-# Checking the name of os for creating a folder for minecraft_instance_manager and minecraft_parent_directory
+# Checking the name of os for creating a folder for minecraft-instance-manager and minecraft_parent_directory
+if platform.system() == 'Linux':
+    userdir = os.getenv('HOME') + '/.'
+elif platform.system() == 'Darwin':
+    userdir = os.getenv('HOME') + '/Library/Application Support/'
+elif platform.system() == 'Windows':
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        sys.exit(0)
+    userdir = os.getenv('APPDATA') + '\\.'
 
-
-def set_default_path():
-    if platform.system() == 'Linux':
-        minecraft_parent_directory = os.getenv('HOME') + '/.'
-    elif platform.system() == 'Darwin':
-        minecraft_parent_directory = os.getenv(
-            'HOME') + '/Library/Application Support/'
-    elif platform.system() == 'Windows':
-        if not ctypes.windll.shell32.IsUserAnAdmin():
-            ctypes.windll.shell32.ShellExecuteW(
-                None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-            sys.exit(0)
-        minecraft_parent_directory = os.getenv('APPDATA') + '\\.'
-
-    # Variables for paths
-    minecraft_directory_var = minecraft_parent_directory + 'minecraft'
-    config.set('dirs', 'minecraft_directory', str(minecraft_directory_var))
-
-    minecraft_instance_manager_directory_var = minecraft_parent_directory + \
-        'minecraft_instance_manager/'
-    config.set('dirs', 'minecraft_instance_manager_directory',
-               str(minecraft_instance_manager_directory_var))
-
-    instances_directory_var = minecraft_instance_manager_directory_var + 'instances/'
-    config.set('dirs', 'instances_directory', str(instances_directory_var))
-
-
-minecraft_directory = config['dirs']['minecraft_directory']
-minecraft_instance_manager_directory = config['dirs']['minecraft_instance_manager_directory']
-instances_directory = config['dirs']['instances_directory']
-
-
-# Needed in order to reselect the reset instance if it was selected before
-was_active = False
+# Variables for paths
+minecraft_directory = userdir + 'minecraft'
+minecraft_instance_manager_directory = userdir + 'minecraft-instance-manager/'
+instances_directory = minecraft_instance_manager_directory + 'instances/'
+config_file = minecraft_instance_manager_directory + 'config.ini'
 
 # Checking for existing minecraft and minecraft-instance-manager folders
 if not os.path.exists(minecraft_instance_manager_directory):
@@ -56,25 +35,22 @@ if not os.path.exists(minecraft_instance_manager_directory):
 if not os.path.exists(instances_directory):
     os.mkdir(instances_directory)
 
-# Function to view list
+# Needed in order to reselect the reset instance if it was selected before
+was_active = False
 
+def update_dir(new_dir):
+    config['dirs'] = {'instances_directory': new_dir}
+    with open(config_file, 'w') as configfile:
+        config.write(configfile)
+    
+    global instances_directory
+    instances_directory = config['dirs']['instances_directory']
 
-def list_instances():
-    # if there is at least 1 instance
-    if len(os.listdir(instances_directory)) > 0:
-        # for instance name print instance name with cute view
-        for instance in os.listdir(instances_directory):
-            if instance == '.DS_Store':
-                continue
-            if os.path.exists(minecraft_directory):
-                if os.path.islink(minecraft_directory):
-                    if instance == os.path.split(os.readlink(minecraft_directory))[1]:
-                        print('*', end='')
-                    else:
-                        print(' ', end='')
-            print(instance)
-    else:
-        print('No available instances found.')
+if os.path.isfile(config_file):
+    config.read(config_file)
+    instances_directory = config['dirs']['instances_directory']
+else: 
+    update_dir(minecraft_instance_manager_directory + 'instances/')
 
 
 # Select instance function
@@ -203,6 +179,21 @@ def duplicate_instance(instance, duplicate):
 
 class Minecraft_IM(QtWidgets.QMainWindow):
 
+    # Function to view list
+    def list_instances(self):
+        self.ui.instances_listWidget.clear()
+        # if there is at least 1 instance
+        if len(os.listdir(instances_directory)) > 0:
+            # for instance name print instance name with cute view
+            for instance in os.listdir(instances_directory):
+                if instance == '.DS_Store':
+                    continue
+                if os.path.exists(minecraft_directory):
+                    if os.path.islink(minecraft_directory):
+                        if instance == os.path.split(os.readlink(minecraft_directory))[1]:
+                            self.ui.active_instance_label.setText('Active instance: ' + instance)
+                self.ui.instances_listWidget.addItem(instance)
+
     def __init__(self):
         super(Minecraft_IM, self).__init__()
         self.ui = Ui_MainWindow()
@@ -215,11 +206,13 @@ class Minecraft_IM(QtWidgets.QMainWindow):
         self.ui.select_pushButton.clicked.connect(self.btn_select)
         self.ui.unselect_pushButton.clicked.connect(self.btn_unselect)
         self.ui.rename_pushButton.clicked.connect(self.btn_rename)
-        self.ui.set_default_location_pushButton.clicked.connect(
-            self.btn_setdefloc)
+        self.ui.set_default_location_pushButton.clicked.connect(self.btn_setdefloc)
         self.ui.browse_pushButton.clicked.connect(self.btn_browse)
-        self.ui.storage_location_OK_pushButton.clicked.connect(
-            self.btn_storeloc)
+        self.ui.storage_location_OK_pushButton.clicked.connect(self.btn_setloc)
+
+        self.ui.storage_location_lineEdit.setText(config['dirs']['instances_directory'])
+        self.list_instances()
+
 
     def showDialog(self):
         pass
@@ -246,16 +239,32 @@ class Minecraft_IM(QtWidgets.QMainWindow):
         pass
 
     def btn_setdefloc(self):
-        set_default_path
+        update_dir(minecraft_instance_manager_directory + 'instances/')
+        self.ui.storage_location_lineEdit.setText(config['dirs']['instances_directory'])
+        self.list_instances()
 
     def btn_browse(self):
-        pass
+        file_dialog = QtWidgets.QFileDialog(self)
+        file_dialog.setFileMode(QtWidgets.QFileDialog.DirectoryOnly)
+        print(instances_directory)
+        file_dialog.setDirectory(os.getenv('HOME'))
+        if file_dialog.exec_():
+            update_dir(file_dialog.selectedFiles()[0])
+            self.ui.storage_location_lineEdit.setText(instances_directory)
+            self.list_instances()
 
-    def btn_storeloc(self):
-        pass
+    def btn_setloc(self):
+        new_dir = self.ui.storage_location_lineEdit.text()
+        if os.path.isdir(new_dir):
+            update_dir(new_dir)
+            self.list_instances()
+        else:
+            messageBox = QtWidgets.QMessageBox()
+            messageBox.critical(self, "Error", "Invalid directory")
+            messageBox.setFixedSize(500,200)
 
 
-app = QtWidgets.QApplication([])
+app = QtWidgets.QApplication(sys.argv)
 application = Minecraft_IM()
 application.show()
 
