@@ -46,9 +46,12 @@ def update_dir(new_dir):
     global instances_directory
     instances_directory = config['dirs']['instances_directory']
 
-if os.path.isfile(config_file):
+if os.path.exists(config_file):
     config.read(config_file)
-    instances_directory = config['dirs']['instances_directory']
+    if os.path.exists(config['dirs']['instances_directory']):
+        instances_directory = config['dirs']['instances_directory']
+    else:
+        update_dir(minecraft_instance_manager_directory + 'instances/')
 else: 
     update_dir(minecraft_instance_manager_directory + 'instances/')
 
