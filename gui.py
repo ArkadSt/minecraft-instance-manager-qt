@@ -20,9 +20,12 @@ class Ui_MainWindow(object):
         self.instances_listWidget = QtWidgets.QListWidget(self.centralwidget)
         self.instances_listWidget.setGeometry(QtCore.QRect(10, 40, 261, 241))
         self.instances_listWidget.setObjectName("instances_listWidget")
-        self.storage_location_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.storage_location_lineEdit.setGeometry(QtCore.QRect(10, 320, 261, 21))
-        self.storage_location_lineEdit.setObjectName("storage_location_lineEdit")
+        self.storage_location_lineEdit = QtWidgets.QLineEdit(
+            self.centralwidget)
+        self.storage_location_lineEdit.setGeometry(
+            QtCore.QRect(10, 320, 261, 21))
+        self.storage_location_lineEdit.setObjectName(
+            "storage_location_lineEdit")
         self.active_instance_label = QtWidgets.QLabel(self.centralwidget)
         self.active_instance_label.setGeometry(QtCore.QRect(10, 10, 521, 21))
         self.active_instance_label.setObjectName("active_instance_label")
@@ -37,12 +40,18 @@ class Ui_MainWindow(object):
         self.browse_pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.browse_pushButton.setGeometry(QtCore.QRect(290, 320, 111, 21))
         self.browse_pushButton.setObjectName("browse_pushButton")
-        self.set_default_location_pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.set_default_location_pushButton.setGeometry(QtCore.QRect(340, 350, 141, 21))
-        self.set_default_location_pushButton.setObjectName("set_default_location_pushButton")
-        self.storage_location_OK_pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.storage_location_OK_pushButton.setGeometry(QtCore.QRect(420, 320, 111, 21))
-        self.storage_location_OK_pushButton.setObjectName("storage_location_OK_pushButton")
+        self.set_default_location_pushButton = QtWidgets.QPushButton(
+            self.centralwidget)
+        self.set_default_location_pushButton.setGeometry(
+            QtCore.QRect(340, 350, 141, 21))
+        self.set_default_location_pushButton.setObjectName(
+            "set_default_location_pushButton")
+        self.storage_location_OK_pushButton = QtWidgets.QPushButton(
+            self.centralwidget)
+        self.storage_location_OK_pushButton.setGeometry(
+            QtCore.QRect(420, 320, 111, 21))
+        self.storage_location_OK_pushButton.setObjectName(
+            "storage_location_OK_pushButton")
         self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.gridLayoutWidget.setGeometry(QtCore.QRect(290, 40, 241, 231))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
@@ -55,7 +64,8 @@ class Ui_MainWindow(object):
         self.delete_pushButton = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.delete_pushButton.setObjectName("delete_pushButton")
         self.gridLayout.addWidget(self.delete_pushButton, 2, 0, 1, 1)
-        self.duplicate_pushButton = QtWidgets.QPushButton(self.gridLayoutWidget)
+        self.duplicate_pushButton = QtWidgets.QPushButton(
+            self.gridLayoutWidget)
         self.duplicate_pushButton.setObjectName("duplicate_pushButton")
         self.gridLayout.addWidget(self.duplicate_pushButton, 2, 1, 1, 1)
         self.select_pushButton = QtWidgets.QPushButton(self.gridLayoutWidget)
@@ -77,15 +87,21 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Minecraft instance manager"))
-        self.active_instance_label.setText(_translate("MainWindow", "Active instance: "))
-        self.storage_location_label.setText(_translate("MainWindow", "Storage location:"))
+        MainWindow.setWindowTitle(_translate(
+            "MainWindow", "Minecraft instance manager"))
+        self.active_instance_label.setText(
+            _translate("MainWindow", "No instance selected"))
+        self.storage_location_label.setText(
+            _translate("MainWindow", "Storage location:"))
         self.browse_pushButton.setText(_translate("MainWindow", "Browse"))
-        self.set_default_location_pushButton.setText(_translate("MainWindow", "set default location"))
-        self.storage_location_OK_pushButton.setText(_translate("MainWindow", "OK"))
+        self.set_default_location_pushButton.setText(
+            _translate("MainWindow", "set default location"))
+        self.storage_location_OK_pushButton.setText(
+            _translate("MainWindow", "OK"))
         self.rename_pushButton.setText(_translate("MainWindow", "Rename"))
         self.delete_pushButton.setText(_translate("MainWindow", "Delete"))
-        self.duplicate_pushButton.setText(_translate("MainWindow", "Duplicate"))
+        self.duplicate_pushButton.setText(
+            _translate("MainWindow", "Duplicate"))
         self.select_pushButton.setText(_translate("MainWindow", "Select"))
         self.unselect_pushButton.setText(_translate("MainWindow", "Unselect"))
         self.create_pushButton.setText(_translate("MainWindow", "Create"))
