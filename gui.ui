@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Minecraft instance manager</string>
+   <string>minecraft-instance-manager</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QListWidget" name="instances_listWidget">
@@ -44,7 +44,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Active instance: </string>
+     <string>No active instances</string>
     </property>
    </widget>
    <widget class="Line" name="line">
@@ -144,16 +144,16 @@
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QPushButton" name="select_pushButton">
+      <widget class="QPushButton" name="activate_pushButton">
        <property name="text">
-        <string>Select</string>
+        <string>Activate</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="unselect_pushButton">
+      <widget class="QPushButton" name="deactivate_pushButton">
        <property name="text">
-        <string>Unselect</string>
+        <string>Deactivate</string>
        </property>
       </widget>
      </item>
