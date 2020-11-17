@@ -1,7 +1,7 @@
 # minecraft-instance-manager-qt
 
 This is the PyQt5 version of the program minecraft-instance-manager.
-minecraft-instance-manager is the program makes possible to have multiple instances of Minecraft with their own set of mods, resourcepacks, etc.
+minecraft-instance-manager is the program that makes possible to have multiple instances of Minecraft with their own set of mods, resourcepacks, etc.
 
 ### List of contributors
 ArkadSt - developer  
