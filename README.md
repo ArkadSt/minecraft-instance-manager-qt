@@ -8,7 +8,7 @@ ArkadSt - developer
 ra1nlox - developer
 
 ## Dependencies
-minecraft_instance_manager needs **PyQt5** package in order to work.  
+minecraft-instance-manager-qt needs **PyQt5** package in order to work.  
 It can be easily installed by performing `pip install PyQt5`
 
 ## Launch
