@@ -37,7 +37,7 @@ The Minecraft folder becomes a symlink, targeted at the active instance folder.
 
 ## How to manage Minecraft instances
 Instance folder can be managed just like a normal Minecraft folder.
-Minecraft instances are stored here:
+Minecraft instances are stored here (these are default locations and can be changed in program):
 
 ```
 Windows:    %appdata%\.minecraft-instance-manager\instances
