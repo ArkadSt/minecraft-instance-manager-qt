@@ -248,7 +248,7 @@ class Minecraft_IM(QtWidgets.QMainWindow):
         old_instance_name = self.ui.instances_listWidget.currentItem().text()
 
         dialog = QtWidgets.QInputDialog()
-        new_instance_name, ok = dialog.getText(self, 'Name', 'NB! Depending on the size of the instance, the following process may take some time.\n'
+        new_instance_name, ok = dialog.getText(self, 'Name', 'NB! Depending on the size of the instance, the following process may take some time and interface will not be responding during this time. Be patient\n'
                                                                 'Enter the name for the duplicate:')
 
         if ok:
